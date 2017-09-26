@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Date    : 2017-08-18 17:18:08
+# @Date    : 2017-09-20 15:41:01
 # @Author  : ${author} (${email})
 # @Link    : ${link}
 # @Version : $Id$
-# -*- coding: utf-8 -*-
+
 import os
 import jieba
-
-#wordvec获取语料库
 
 jieba.load_userdict("E://mc//fenlei2//userdict.txt")
 
@@ -16,9 +14,10 @@ jieba.load_userdict("E://mc//fenlei2//userdict.txt")
 # words = list(jieba.cut(text))
 # print('/'.join(words))
 
+f = open("E://mc//xray//i1.txt", 'r', encoding='utf-8')
+text = f.read()
 
-f = open("E://mc//xray//i0.txt", 'r', encoding='utf-8')
-text = f.read().replace('，','').replace('：','').replace('。','').replace('；','').replace('【','').replace('】','').replace('及','').replace(',','')
+# text = f.read().replace('，','').replace('：','').replace('。','').replace('；','').replace('【','').replace('】','').replace('及','').replace(',','')
 print(text)
 words = list(jieba.cut(text))
 print(' '.join(words))
@@ -39,15 +38,17 @@ sentences = word2vec.Text8Corpus(u"E:\\AA\\word2vec\\corpus.txt")  # 加载语�
 model = word2vec.Word2Vec.load(u"mcjiabamy2.model")
 
 
-filer = open("E://mc//xray//ri5.txt", 'a', encoding='utf-8')
+filer = open("E://mc//xray//rei10.txt", 'a', encoding='utf-8')
+filer1 = open("E://mc//xray//rei11.txt", 'a', encoding='utf-8')
 filenum = 10
 filecount = 0
 
-#分类
+
 for word in words:
     word = word.strip()
     print(word)
-    if word=='，' or word=='。' or word=='：' or word=='、'or word=='【'or word=='】' or word==',' :
+    if word=='，' or word=='。' or word=='：' or word=='、'or word=='【'or word=='】' or word==',' or word=='；' :
+        filer1.write("\n")
         continue
     maxmaxs = 0.0
     maxavg = 0.0
@@ -89,14 +90,17 @@ for word in words:
         else:
             avg1 = sumsimilarity/count
         print (sentity+":"+"和【"+word+"】的最大相似度为："+str(maxsimilarity)+"平均相似度："+str(avg1))
-        print(maxavg)
-        print(maxsimilarity)
-        if maxsimilarity > 0.99:
+        # print(maxavg)
+        # print(maxsimilarity)
+        if  round(maxsimilarity, 2) == 1.00:
+            print("最大相似度为1")
             jiegou = filename
             break
         elif maxavg < maxsimilarity:
             jiegou = filename
 
     filer.write(jiegou+":"+word+"\n")
+    filer1.write(word+" ")
 print("done")
+
 
